@@ -1,0 +1,34 @@
+- hosts: all
+  tasks:
+    - name: install apache on debian
+      apt:
+        name: apache2
+        update_cache: yes
+        state: present
+          
+    - name: Stand and Enable Apache
+      systemd:
+        state: started
+        enabled: yes
+        name: apache2
+
+    - name: install unzip on debian
+      apt:
+        name: unzip
+        state: latest
+
+    - name: Download a Template on Debian
+      get_url:
+        url: https://www.free-css.com/assets/files/free-css-templates/download/page294/shapel.zip
+        dest: /tmp/shapel.zip
+
+    - name: Extract Template
+      unarchive:
+        src: /tmp/shapel.zip
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Move Template to /var/www/html
+      shell: mv /tmp/shapel-html/* /var/www/html/
+      args:
+        creates: /var/www/html/gallery.html       

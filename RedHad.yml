@@ -1,0 +1,35 @@
+- hosts: all
+  tasks:
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Install packages
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - httpd
+      - unzip
+
+  - name: Start and Enable Apache
+    systemd:
+      name: httpd
+      state: started
+      enabled: yes  
+
+  - name: Download a Template
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page294/shapel.zip
+      dest: /tmp/shapel.zip
+
+  - name: Extract Template
+    unarchive:
+      src: /tmp/shapel.zip
+      dest: /tmp/
+      remote_src: yes
+
+  - name: Move Template to /var/www/html
+    shell: mv /tmp/shapel-html/* /var/www/html/  
+    args:
+      creates: /var/www/html/gallery.html

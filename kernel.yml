@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+  - shell: uname -r
+    register: version
+
+  - debug:
+      msg: "Version is {{ version.stdout }}"
